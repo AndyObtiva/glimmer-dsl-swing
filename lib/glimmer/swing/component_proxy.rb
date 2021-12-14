@@ -20,6 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require 'glimmer/swing/packages'
+require 'glimmer/swing/component_listener_proxy'
 
 module Glimmer
   module Swing
@@ -71,8 +72,8 @@ module Glimmer
         def component_class(keyword)
           unless flyweight_component_class.keys.include?(keyword)
             begin
-              component_class_name = component_class_symbol(keyword).to_s
-              component_class = eval(component_class_name)
+              pd component_class_name = component_class_symbol(keyword).to_s
+              pd component_class = eval(component_class_name)
               unless component_class.ancestors.include?(Java::JavaAwt::Component)
                 component_class = component_class_manual_entries[keyword]
                 if component_class.nil?
@@ -145,10 +146,87 @@ module Glimmer
       def content(&block)
         Glimmer::DSL::Engine.add_content(self, Glimmer::DSL::Swing::ComponentExpression.new, @keyword, &block)
       end
-            
+      
+      def can_handle_observation_request?(observation_request)
+        if observation_request.start_with?('on_')
+          event = observation_request.sub(/^on_/, '')
+          can_add_listener?(event)
+        end
+      end
+      
+      def handle_observation_request(observation_request, &block)
+        if observation_request.start_with?('on_')
+          event = observation_request.sub(/^on_/, '')
+          if can_add_listener?(event)
+            event = observation_request.sub(/^on_/, '')
+            add_listener(event, &block)
+          end
+        end
+      end
+      
+      def can_add_listener?(underscored_listener_name)
+        @original && !self.class.find_listener(@original.getClass, underscored_listener_name).empty?
+      end
+
+      def add_listener(underscored_listener_name, &block)
+        component_add_listener_method, listener_class, listener_method = self.class.find_listener(@original.getClass, underscored_listener_name)
+        component_listener_proxy = nil
+        listener = listener_class.new(listener_method => block)
+        @original.send(component_add_listener_method, listener)
+        ComponentListenerProxy.new(component: @original, listener: listener, component_add_listener_method: component_add_listener_method, listener_class: listener_class, listener_method: listener_method)
+      end
+
+      # Looks through SWT class add***Listener methods till it finds one for which
+      # the argument is a listener class that has an event method matching
+      # underscored_listener_name
+      def self.find_listener(component_class, underscored_listener_name)
+        @listeners ||= {}
+        listener_key = [component_class.name, underscored_listener_name]
+        unless @listeners.has_key?(listener_key)
+          listener_method_name = underscored_listener_name.camelcase(:lower)
+          component_class.getMethods.each do |component_add_listener_method|
+            if component_add_listener_method.getName.match(/add.*Listener/)
+              component_add_listener_method.getParameterTypes.each do |listener_type|
+                listener_type.getMethods.each do |listener_method|
+                  if (listener_method.getName == listener_method_name)
+                    @listeners[listener_key] = [component_add_listener_method.getName, listener_class(listener_type), listener_method.getName]
+                    return @listeners[listener_key]
+                  end
+                end
+              end
+            end
+          end
+          @listeners[listener_key] = []
+        end
+        @listeners[listener_key]
+      end
+
+      # Returns a Ruby class that implements listener type Java interface with ability to easily
+      # install a block that gets called upon calling a listener event method
+      def self.listener_class(listener_type)
+        @listener_classes ||= {}
+        listener_class_key = listener_type.name
+        unless @listener_classes.has_key?(listener_class_key)
+          @listener_classes[listener_class_key] = Class.new(Object).tap do |listener_class|
+            listener_class.send :include, (eval listener_type.name.sub("interface", ""))
+            listener_class.define_method('initialize') do |event_method_block_mapping|
+              @event_method_block_mapping = event_method_block_mapping
+            end
+            listener_type.getMethods.each do |event_method|
+              listener_class.define_method(event_method.getName) do |*args|
+                @event_method_block_mapping[event_method.getName]&.call(*args)
+              end
+            end
+          end
+        end
+        @listener_classes[listener_class_key]
+      end
+
       private
       
       def build_widget
+        pd keyword
+        pd ComponentProxy.component_class(keyword)
         @original = ComponentProxy.component_class(keyword).new(*normalize_args(args))
       end
       

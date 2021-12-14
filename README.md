@@ -86,24 +86,6 @@ jframe('Hello, World!') {
 }.show
 ```
 
-For actual application development outside of simple demos, mixin the `Glimmer` module into a custom application class instead:
-
-```ruby
-require 'glimmer-dsl-swing'
-
-class SomeGlimmerApplication
-  include Glimmer
-  
-  def launch
-    jframe('Hello, World!') {
-      jlabel('Hello, World!')
-    }.show
-  end
-end
-
-SomeGlimmerApplication.new.launch
-```
-
 ## Girb (Glimmer IRB)
 
 You can run the `girb` command (`bin/girb` if you cloned the project locally):
@@ -129,6 +111,26 @@ include Glimmer
 
 jframe('Hello, World!') {
   jlabel('Hello, World!')
+}.show
+```
+
+#### Hello, Button!
+
+![screenshots/glimmer-dsl-swing-mac-hello-button.png](screenshots/glimmer-dsl-swing-mac-hello-button.png)
+
+```ruby
+require 'glimmer-dsl-swing'
+
+include Glimmer
+
+jframe('Hello, Button!') {
+  @button = jbutton('Click To Increment: 0') {
+    on_action_performed {
+      button_text_match = @button.text.match(/(.*)(\d+)$/)
+      count = button_text_match[2].to_i + 1
+      @button.text = "#{button_text_match[1]}#{count}"
+    }
+  }
 }.show
 ```
 
