@@ -86,6 +86,153 @@ jframe('Hello, World!') {
 }.show
 ```
 
+## Glimmer GUI DSL
+
+The Glimmer GUI DSL enables development of desktop graphical user interfaces in a manner similar to HTML, but in one language, Ruby, thus avoiding the multi-language separation dissonance encountered on the web, especially given that Ruby looping/conditional constructs do not need scriptlets to be added around View code. This makes desktop development extremely productive.
+
+1 - Keywords
+
+You may declare any swing/awt component with its keyword, which is the underscored version of the class name. For example, `jframe` is the keyword for `javax.swing.JFrame` (`j_frame` is acceptable too)
+
+Examples:
+
+```ruby
+jframe
+jbutton
+jlabel
+```
+
+2 - Arguments
+
+You may pass any arguments that a [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component constructor accepts to its Glimmer keyword.
+
+Example `JFrame`, `JLabel`, and `JButton` have a constructor signature that accepts a string representing title or text:
+
+```ruby
+jframe('Hello, World!')
+jbutton('Push Me')
+jlabel('Name')
+```
+
+The recommended style is to always wrap arguments with parentheses for component keywords.
+
+3 - Content Block
+
+You may pass a content block to any [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component keyword, which contains properties and/or nested components.
+
+Example:
+
+```ruby
+jframe('Hello, World!') {
+  minimum_size 320, 240
+
+  jlabel('Hello, World!')
+}
+```
+
+The recommended style for the content block is to always be curly braces to denote as View nesting code different from the logic in looping/conditional constructs that utilize `do;end` instead.
+
+Property arguments never have parentheses.
+
+4 - Listeners
+
+You may declare listeners with their event method name on the [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) listener class (these are the classes in the signatures of `AddXYZListener` methods on [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component classes).
+
+For example, `JButton` has an `AddXYZListener` method called `AddActionListener`, which accepts an `ActionListener` class. That class has one event method: `actionPerformed`. In Glimmer, you simply underscore that and prefix with `on_`:
+
+```ruby
+jframe('Hello, Button!') {
+  jbutton('Click') {
+    on_action_performed do
+      puts 'Clicked!'
+    end
+  }
+}
+```
+
+The recommended style for listeners is always a `do; end` block.
+
+5 - Component Proxy & Methods
+
+When utilizing the Glimmer GUI DSL, you get back proxy objects that wrap [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) components. To access the original component wrapped by the proxy object, you may call the `#original` method.
+
+Furthermore, you may invoke any method available on the component on the proxy object, like the `#show` method on `JFrame`.
+
+```ruby
+frame1 = jframe('Hello, World!') {
+  # ...
+}
+frame1.show
+```
+
+### Shape DSL
+
+[Glimmer DSL for Swing](https://rubygems.org/gems/glimmer-dsl-swing) might be the only Ruby Swing DSL out there that supports an additional Shape DSL.
+
+This enables declarative painting of arbitrary shapes using Java 2D, which is similar to how SVG works on the web.
+
+Simply utilize underscored shape names from the `java.awt.geom` [package classes](https://docs.oracle.com/javase/8/docs/api/java/awt/geom/package-summary.html) minus the `2D` suffix, following the same general rules of the [Glimmer GUI DSL](#glimmer-gui-dsl).
+
+For example, `Arc2D` becomes simply `arc`.
+
+Additionally, you can set `draw_color` or `fill_color` property as an rgb/rgba hash (e.g. `r: 255, g: 0, b: 0`)
+
+Example:
+
+```ruby
+require 'glimmer-dsl-swing'
+
+include Glimmer
+
+jframe('Hello, Shapes!') {
+  minimum_size 400, 400
+  
+  arc(40, 40, 90, 90, 30, 230, 0) {
+    fill_color r: 255, g: 0, b: 0
+    draw_color r: 0, g: 255, b: 255
+  }
+  
+  arc(40, 140, 90, 90, 30, 230, 1) {
+    fill_color r: 255, g: 0, b: 0
+    draw_color r: 0, g: 255, b: 255
+  }
+  
+  arc(40, 240, 90, 90, 30, 230, 2) {
+    fill_color r: 255, g: 0, b: 0
+    draw_color r: 0, g: 255, b: 255
+  }
+  
+  ellipse(140, 40, 180, 90) {
+    fill_color r: 0, g: 255, b: 255
+    draw_color r: 255, g: 0, b: 0
+  }
+  
+  rectangle(140, 140, 180, 90) {
+    fill_color r: 0, g: 255, b: 255
+    draw_color r: 255, g: 0, b: 0
+  }
+  
+  round_rectangle(140, 240, 180, 90, 60, 40) {
+    fill_color r: 0, g: 255, b: 255
+    draw_color r: 255, g: 0, b: 0
+  }
+
+  line(180, 60, 280, 110) {
+    draw_color r: 0, g: 0, b: 0
+  }
+  
+  quad_curve(170, 60, 180, 90, 220, 100) {
+    draw_color r: 0, g: 0, b: 0
+  }
+  
+  cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
+    draw_color r: 0, g: 0, b: 0
+  }
+}.show
+```
+
+![screenshots/glimmer-dsl-swing-mac-hello-shapes.png](screenshots/glimmer-dsl-swing-mac-hello-shapes.png)
+
 ## Girb (Glimmer IRB)
 
 You can run the `girb` command (`bin/girb` if you cloned the project locally):
@@ -149,11 +296,11 @@ include Glimmer
 
 jframe('Hello, Button!') {
   @button = jbutton('Click To Increment: 0') {
-    on_action_performed {
+    on_action_performed do
       button_text_match = @button.text.match(/(.*)(\d+)$/)
       count = button_text_match[2].to_i + 1
       @button.text = "#{button_text_match[1]}#{count}"
-    }
+    end
   }
 }.show
 ```
