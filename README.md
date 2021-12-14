@@ -48,6 +48,7 @@ Other [Glimmer](https://rubygems.org/gems/glimmer) DSL gems you might be interes
 - JDK 8 (find at https://www.oracle.com/java/technologies/downloads/#java8)
 - [RVM](http://rvm.io) on Mac & Linux (not available on Windows)
 - JRuby 9.2.19.0 (supporting Ruby 2.5.x syntax) (get via [RVM](http://rvm.io) on Mac and Linux by running `rvm install jruby-9.2.19.0`; On Windows, find at [https://www.jruby.org/download](https://www.jruby.org/download))
+- Install puts_debuggerer gem (`gem install puts_debuggerer`)
 
 Note: On the Mac, if you have [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) installed, and it added `export JRUBY_OPTS="$JRUBY_OPTS -J-XstartOnFirstThread"` to your `.zprofile`, `.zshrc`, `.bash_profile`, or `.bashrc`, make sure to disable it before using Glimmer DSL for Swing. Unfortunately, it is not compatible with it and will hang its apps until disabled.
 
@@ -57,6 +58,7 @@ Note: On the Mac, if you have [Glimmer DSL for SWT](https://github.com/AndyObtiv
 
 Run this command to install directly:
 ```
+gem install puts_debuggerer
 gem install glimmer-dsl-swing
 ```
 
@@ -64,6 +66,7 @@ gem install glimmer-dsl-swing
 
 Add the following to `Gemfile`:
 ```
+gem 'puts_debuggerer', '> 0'
 gem 'glimmer-dsl-swing', '~> 0.0.1'
 ```
 
@@ -77,6 +80,7 @@ bundle
 Require the library and mixin the `Glimmer` module to utilize the Glimmer GUI DSL for Swing:
 
 ```ruby
+require 'pd'
 require 'glimmer-dsl-swing'
 
 include Glimmer
