@@ -37,6 +37,6 @@ require 'facets/hash/stringify_keys'
 
 # Internal requires
 require 'glimmer/swing'
-require 'glimmer/swing/ext/glimmer'
 require 'glimmer/swing/ext/glimmer/config'
+require 'glimmer/swing/ext/glimmer'
 require 'glimmer/dsl/swing/dsl'

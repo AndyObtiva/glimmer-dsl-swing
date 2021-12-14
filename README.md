@@ -14,8 +14,8 @@ There has been a great divide between two big GUI toolkits in Java in the past:
 That said, from a balanced software engineering point of view, there are sometimes non-functional requirements that might target [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) as an appropriate GUI toolkit solution. Like in the case of extending legacy [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) applications or developing rare applications that require fully custom looking graphical user interfaces (typically not recommended), such as traffic control planning or diagramming applications. In the latter case, it would not matter whether to use [SWT](https://www.eclipse.org/swt/) or [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) as they both provide support for building non-native components (in addition to native widgets in the case of [SWT](https://www.eclipse.org/swt/)).
 
 [Glimmer DSL for Swing](https://rubygems.org/gems/glimmer-dsl-swing) aims to supercharge productivity and maintainability in developing [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) applications by providing a DSL similar to [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) having:
-- Declarative DSL syntax that visually maps to the GUI component hierarchy
-- Convention over configuration via smart defaults and automation of low-level details
+- [Declarative DSL syntax](#glimmer-gui-dsl) that visually maps to the GUI component hierarchy
+- Convention over configuration via [smart defaults and automation of low-level details](#smart-defaults-and-conventions)
 - Requiring the least amount of syntax possible to build GUI
 - Custom Keyword support
 - Bidirectional Data-Binding to declaratively wire and automatically synchronize GUI with Business Models
@@ -165,6 +165,8 @@ frame1 = jframe('Hello, World!') {
 frame1.show
 ```
 
+Despite `#show` being deprecated in the Java API, it is recommended to use `#show` instead of `visible=` in the Glimmer GUI DSL because it has less awkward syntax (it calls `visible=` behind the scenes to avoid the deprecated API). `#show` also invokes `pack` automatically on first run, and ensures utilizing `SwingUtilities.invokeLater` behind the scenes.
+
 ### Shape DSL
 
 [Glimmer DSL for Swing](https://rubygems.org/gems/glimmer-dsl-swing) might be the only Ruby Swing DSL out there that supports an additional Shape DSL.
@@ -174,6 +176,8 @@ This enables declarative painting of arbitrary shapes using Java 2D, which is si
 Simply utilize underscored shape names from the `java.awt.geom` [package classes](https://docs.oracle.com/javase/8/docs/api/java/awt/geom/package-summary.html) minus the `2D` suffix, following the same general rules of the [Glimmer GUI DSL](#glimmer-gui-dsl).
 
 For example, `Arc2D` becomes simply `arc`.
+
+Glimmer utilizes the `Double` variation of shape classes.
 
 Additionally, you can set `draw_color` or `fill_color` property as an rgb/rgba hash (e.g. `r: 255, g: 0, b: 0`)
 
@@ -233,6 +237,11 @@ jframe('Hello, Shapes!') {
 
 ![screenshots/glimmer-dsl-swing-mac-hello-shapes.png](screenshots/glimmer-dsl-swing-mac-hello-shapes.png)
 
+## Smart Defaults and Conventions
+
+- `jframe` automatically invokes `pack` on first run of `show`, and ensures utilizing `SwingUtilities.invokeLater` behind the scenes.
+- When nesting a shape under a [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component, it is automatically added to shapes to paint on top of component (after painting component itself).
+
 ## Girb (Glimmer IRB)
 
 You can run the `girb` command (`bin/girb` if you cloned the project locally):
@@ -241,7 +250,7 @@ You can run the `girb` command (`bin/girb` if you cloned the project locally):
 girb
 ```
 
-This gives you `irb` with the `glimmer-dsl-gtk` gem loaded and the `Glimmer` module mixed into the main object for easy experimentation with GUI.
+This gives you `irb` with the `glimmer-dsl-swing` gem loaded and the `Glimmer` module mixed into the main object for easy experimentation with GUI.
 
 ## Samples
 
