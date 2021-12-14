@@ -167,6 +167,58 @@ frame1.show
 
 Despite `#show` being deprecated in the Java API, it is recommended to use `#show` instead of `visible=` in the Glimmer GUI DSL because it has less awkward syntax (it calls `visible=` behind the scenes to avoid the deprecated API). `#show` also invokes `pack` automatically on first run, and ensures utilizing `SwingUtilities.invokeLater` behind the scenes.
 
+6 - Observe Model Attributes
+
+In Smalltalk-MVC ([Model View Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) Architectural Pattern), the View is an active View that observes the Model for changes and updates itself.
+
+![MVC](https://camo.githubusercontent.com/0651c35cc70c5ba422876936733b07667368835bbd3cdbf5e706151410bdea04/68747470733a2f2f7777772e7265736561726368676174652e6e65742f70726f66696c652f44616e6e792d5765796e732f7075626c69636174696f6e2f3236393330333631312f6669677572652f666967322f41533a38353831333330353634363238363640313538313630363237323830302f536d616c6c74616c6b38302d4d56432d7061747465726e2d566965772d616e642d436f6e74726f6c6c65722d776f726b2d61732d612d706169722d616c6c6f77696e672d7468652d757365722d746f2d696e7465726163742e70706d)
+
+This can be achieved with the Glimmer GUI DSL using the `observe` keyword, which takes a model (any object, including `self`) and attribute Symbol or String expression (e.g. `:count` or `'address.street'`).
+
+The model is automatically enhanced as an `Glimmer::DataBinding::ObservableModel` / `Glimmer::DataBinding::ObservableHash` / `Glimmer::DataBinding::ObservableArray` depending on its type to support notifying observers of attribute changes (when performed using the attribute writer, which automatically calls added method `notify_observers(attribute)`)
+
+Note that it is usually recommended to observe external model objects (not `self`), but `self` is OK in very simple cases or presentation-related attributes only.
+
+Example:
+
+```ruby
+require 'glimmer-dsl-swing'
+
+class Counter
+  attr_accessor :count
+
+  def initialize
+    self.count = 0
+  end
+end
+
+class HelloButton
+  include Glimmer
+  
+  def initialize
+    @counter = Counter.new
+
+    observe(@counter, :count) do |new_count|
+      @button.text = "Click To Increment: #{new_count}"
+    end
+  end
+  
+  def launch
+    jframe('Hello, Button!') {
+      @button = jbutton('Click To Increment: 0') {
+        on_action_performed do
+          @counter.count += 1
+        end
+      }
+    }.show
+  end
+end
+
+HelloButton.new.launch
+```
+
+![screenshots/glimmer-dsl-swing-mac-hello-button.png](screenshots/glimmer-dsl-swing-mac-hello-button.png)
+
 ### Shape DSL
 
 [Glimmer DSL for Swing](https://rubygems.org/gems/glimmer-dsl-swing) might be the only Ruby Swing DSL out there that supports an additional Shape DSL.
@@ -272,6 +324,8 @@ jruby -r ./lib/glimmer-dsl-swing samples/hello/hello_world.rb
 
 ![screenshots/glimmer-dsl-swing-mac-hello-world.png](screenshots/glimmer-dsl-swing-mac-hello-world.png)
 
+[samples/hello/hello_world.rb](samples/hello/hello_world.rb):
+
 ```ruby
 require 'glimmer-dsl-swing'
 
@@ -298,6 +352,8 @@ jruby -r ./lib/glimmer-dsl-swing samples/hello/hello_button.rb
 
 ![screenshots/glimmer-dsl-swing-mac-hello-button.png](screenshots/glimmer-dsl-swing-mac-hello-button.png)
 
+Version 1 (without model) - [samples/hello/hello_button.rb](samples/hello/hello_button.rb):
+
 ```ruby
 require 'glimmer-dsl-swing'
 
@@ -312,6 +368,44 @@ jframe('Hello, Button!') {
     end
   }
 }.show
+```
+
+Version 2 (with model) - [samples/hello/hello_button2.rb](samples/hello/hello_button2.rb):
+
+```ruby
+require 'glimmer-dsl-swing'
+
+class Counter
+  attr_accessor :count
+
+  def initialize
+    self.count = 0
+  end
+end
+
+class HelloButton
+  include Glimmer
+  
+  def initialize
+    @counter = Counter.new
+
+    observe(@counter, :count) do |new_count|
+      @button.text = "Click To Increment: #{new_count}"
+    end
+  end
+  
+  def launch
+    jframe('Hello, Button!') {
+      @button = jbutton('Click To Increment: 0') {
+        on_action_performed do
+          @counter.count += 1
+        end
+      }
+    }.show
+  end
+end
+
+HelloButton.new.launch
 ```
 
 #### Hello, Shapes!
@@ -329,6 +423,8 @@ jruby -r ./lib/glimmer-dsl-swing samples/hello/hello_shapes.rb
 ```
 
 ![screenshots/glimmer-dsl-swing-mac-hello-shapes.png](screenshots/glimmer-dsl-swing-mac-hello-shapes.png)
+
+[samples/hello/hello_shapes.rb](samples/hello/hello_shapes.rb):
 
 ```ruby
 require 'glimmer-dsl-swing'

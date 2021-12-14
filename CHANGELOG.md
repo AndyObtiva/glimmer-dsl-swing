@@ -2,8 +2,9 @@
 
 ## 0.0.3
 
+- Support `observe` keyword for observing model attributes to update the View
 - Support adding `include Glimmer` inside a class
-- Hello, Button! sample version 2 (decoupled view from observed count attribute)
+- Hello, Button! sample version 2 (decoupled view using `observe` keyword)
 
 ## 0.0.2
 

@@ -1,22 +1,29 @@
 require 'glimmer-dsl-swing'
-require 'glimmer/data_binding/observer'
 
-class HelloButton
-  include Glimmer
-  
+class Counter
   attr_accessor :count
 
   def initialize
     self.count = 0
-    observer = Glimmer::DataBinding::Observer.proc { @button.text = "Click To Increment: #{count}" }
-    observer.observe(self, :count)
+  end
+end
+
+class HelloButton
+  include Glimmer
+  
+  def initialize
+    @counter = Counter.new
+
+    observe(@counter, :count) do |new_count|
+      @button.text = "Click To Increment: #{new_count}"
+    end
   end
   
   def launch
     jframe('Hello, Button!') {
       @button = jbutton('Click To Increment: 0') {
         on_action_performed do
-          self.count += 1
+          @counter.count += 1
         end
       }
     }.show
