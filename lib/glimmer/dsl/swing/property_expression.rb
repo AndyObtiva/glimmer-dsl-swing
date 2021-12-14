@@ -27,13 +27,16 @@ module Glimmer
     module Swing
       class PropertyExpression < Expression
         def can_interpret?(parent, keyword, *args, &block)
-          parent.is_a?(Glimmer::Swing::ComponentProxy) and
+          (
+            parent.is_a?(Glimmer::Swing::ComponentProxy) or
+            parent.is_a?(Glimmer::Swing::ShapeProxy)
+          ) and
             block.nil? and
             parent.respond_to?(keyword, *args)
         end
   
         def interpret(parent, keyword, *args, &block)
-          parent.send(keyword, *args)
+          parent.send("#{keyword}=", *args)
         end
       end
     end

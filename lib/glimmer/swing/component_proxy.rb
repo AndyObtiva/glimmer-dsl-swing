@@ -70,7 +70,7 @@ module Glimmer
         end
           
         def component_class(keyword)
-          unless flyweight_component_class.keys.include?(keyword)
+          unless flyweight_component_class[keyword]
             begin
               component_class_name = component_class_symbol(keyword).to_s
               component_class = eval(component_class_name)
@@ -81,6 +81,25 @@ module Glimmer
                   return nil
                 end
               end
+              component_class = Class.new(component_class) {
+                attr_accessor :shape_proxies
+      
+                def paint(g2)
+                  super(g2)
+                  shape_proxies.each do |shape_proxy|
+                    original_color = g2.get_color
+                    if shape_proxy.fill_color
+                      g2.color = Color.new(shape_proxy.fill_color[:r], shape_proxy.fill_color[:g], shape_proxy.fill_color[:b], shape_proxy.fill_color[:a] || 255)
+                      g2.fill(shape_proxy)
+                    end
+                    if shape_proxy.draw_color
+                      g2.color = Color.new(shape_proxy.draw_color[:r], shape_proxy.draw_color[:g], shape_proxy.draw_color[:b], shape_proxy.draw_color[:a] || 255)
+                      g2.draw(shape_proxy)
+                    end
+                    g2.color = original_color
+                  end
+                end
+              }
               flyweight_component_class[keyword] = component_class
             rescue SyntaxError, NameError => e
               Glimmer::Config.logger.debug {e.full_message}
@@ -236,26 +255,7 @@ module Glimmer
       
       def build
         @original = ComponentProxy.component_class(keyword).new(*normalize_args(args))
-        setup_shape_painting
-      end
-      
-      def setup_shape_painting
-        @original.class.alias_method(:paint_without_glimmer, :paint)
-        @original.class.define_method(:paint) do |g2|
-          paint_without_glimmer(g2)
-          shape_proxies.each do |shape_proxy|
-            original_color = g2.get_color
-            if shape_proxy.fill_color
-              g2.color = Color.new(shape_proxy.fill_color[:r], shape_proxy.fill_color[:g], shape_proxy.fill_color[:b], shape_proxy.fill_color[:a] || 255)
-              g2.fill(shape_proxy)
-            end
-            if shape_proxy.draw_color
-              g2.color = Color.new(shape_proxy.draw_color[:r], shape_proxy.draw_color[:g], shape_proxy.draw_color[:b], shape_proxy.draw_color[:a] || 255)
-              g2.draw(shape_proxy)
-            end
-            g2.color = original_color
-          end
-        end
+        @original.shape_proxies = shape_proxies
       end
       
       def normalize_args(args)
