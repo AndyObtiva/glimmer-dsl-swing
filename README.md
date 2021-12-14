@@ -1,4 +1,4 @@
-# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.1
+# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.2
 ## JRuby Swing Desktop Development GUI Library
 [![Gem Version](https://badge.fury.io/rb/glimmer-dsl-swing.svg)](http://badge.fury.io/rb/glimmer-dsl-swing)
 [![Join the chat at https://gitter.im/AndyObtiva/glimmer](https://badges.gitter.im/AndyObtiva/glimmer.svg)](https://gitter.im/AndyObtiva/glimmer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -64,7 +64,7 @@ gem install glimmer-dsl-swing
 
 Add the following to `Gemfile`:
 ```
-gem 'glimmer-dsl-swing', '~> 0.0.1'
+gem 'glimmer-dsl-swing', '~> 0.0.2'
 ```
 
 And, then run:

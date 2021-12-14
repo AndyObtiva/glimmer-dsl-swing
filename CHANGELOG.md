@@ -4,6 +4,7 @@
 
 - General Java 2D shape support by nesting under any component
 - Support setting `jframe` `minimum_size width, height` without building `Dimension` object manually
+- Hello, Shapes! sample
 - Improve Hello, Button! sample
 
 ## 0.0.1
