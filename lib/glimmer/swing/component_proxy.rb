@@ -32,7 +32,7 @@ module Glimmer
 
       class << self
         def exist?(keyword)
-          !!component_proxy_class(keyword)
+          !!component_class(keyword)
         end
         
         def create(parent, keyword, *args, &block)
@@ -72,8 +72,8 @@ module Glimmer
         def component_class(keyword)
           unless flyweight_component_class.keys.include?(keyword)
             begin
-              pd component_class_name = component_class_symbol(keyword).to_s
-              pd component_class = eval(component_class_name)
+              component_class_name = component_class_symbol(keyword).to_s
+              component_class = eval(component_class_name)
               unless component_class.ancestors.include?(Java::JavaAwt::Component)
                 component_class = component_class_manual_entries[keyword]
                 if component_class.nil?
@@ -225,8 +225,6 @@ module Glimmer
       private
       
       def build_widget
-        pd keyword
-        pd ComponentProxy.component_class(keyword)
         @original = ComponentProxy.component_class(keyword).new(*normalize_args(args))
       end
       
