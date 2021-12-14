@@ -36,8 +36,6 @@ require 'facets/string/camelcase'
 require 'facets/hash/stringify_keys'
 
 # Internal requires
-# require 'ext/glimmer/config'
-# require 'ext/glimmer'
 require 'glimmer/swing'
 require 'glimmer/swing/ext/glimmer'
 require 'glimmer/swing/ext/glimmer/config'
