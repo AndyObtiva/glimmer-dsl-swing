@@ -3,7 +3,7 @@ require 'glimmer-dsl-swing'
 include Glimmer
 
 jframe('Hello, Shapes!') {
-  minimum_size 640, 480
+  minimum_size 400, 400
   
   arc(40, 40, 90, 90, 30, 230, 0) {
     fill_color r: 255, g: 0, b: 0
@@ -46,5 +46,4 @@ jframe('Hello, Shapes!') {
   cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
     draw_color r: 0, g: 0, b: 0
   }
-
 }.show
