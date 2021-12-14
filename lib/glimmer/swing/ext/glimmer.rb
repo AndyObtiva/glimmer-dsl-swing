@@ -32,8 +32,6 @@ module Glimmer
         end
       end
       if Config.import_java_packages
-        pd klass
-        pd Swing::Packages
         klass.include(Swing::Packages)
         klass.extend(Swing::Packages)
       end

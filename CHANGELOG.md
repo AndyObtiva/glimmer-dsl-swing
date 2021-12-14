@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.3
+
+- Support adding `include Glimmer` inside a class
+- Hello, Button! sample version 2 (decoupled view from observed count attribute)
+
 ## 0.0.2
 
 - General Java 2D shape support by nesting under any component

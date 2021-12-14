@@ -31,6 +31,8 @@ module Glimmer
       include Packages
 
       class << self
+        include Packages
+        
         def exist?(keyword)
           !!component_class(keyword)
         end

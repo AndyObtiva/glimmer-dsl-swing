@@ -24,11 +24,11 @@ $LOAD_PATH.unshift(File.expand_path('.', __dir__))
 # External requires
 # require 'logging'
 require 'puts_debuggerer' if ENV['pd'].to_s.downcase == 'true'
+require 'nested_inherited_jruby_include_package'
 # require 'super_module'
 require 'java'
 require 'concurrent-ruby' # ensures glimmer relies on Concurrent data-structure classes (e.g. Concurrent::Array)
 require 'glimmer'
-require 'nested_inherited_jruby_include_package'
 require 'os'
 require 'array_include_methods'
 require 'facets/string/underscore'
@@ -37,6 +37,6 @@ require 'facets/hash/stringify_keys'
 
 # Internal requires
 require 'glimmer/swing'
-require 'glimmer/swing/ext/glimmer/config'
 require 'glimmer/swing/ext/glimmer'
+require 'glimmer/swing/ext/glimmer/config'
 require 'glimmer/dsl/swing/dsl'

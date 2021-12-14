@@ -1,17 +1,22 @@
 require 'glimmer-dsl-swing'
+require 'glimmer/data_binding/observer'
 
 class HelloButton
   include Glimmer
-  include Glimmer::Swing::Packages
+  
+  attr_accessor :count
+
+  def initialize
+    self.count = 0
+    observer = Glimmer::DataBinding::Observer.proc { @button.text = "Click To Increment: #{count}" }
+    observer.observe(self, :count)
+  end
   
   def launch
-    pd self.is_a?(Glimmer::Swing::Packages)
     jframe('Hello, Button!') {
       @button = jbutton('Click To Increment: 0') {
         on_action_performed do
-          button_text_match = @button.text.match(/([^0-9]+)(\d+)$/)
-          count = button_text_match[2].to_i + 1
-          @button.text = "#{button_text_match[1]}#{count}"
+          self.count += 1
         end
       }
     }.show
