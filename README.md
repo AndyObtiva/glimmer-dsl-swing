@@ -3,26 +3,28 @@
 [![Gem Version](https://badge.fury.io/rb/glimmer-dsl-swing.svg)](http://badge.fury.io/rb/glimmer-dsl-swing)
 [![Join the chat at https://gitter.im/AndyObtiva/glimmer](https://badges.gitter.im/AndyObtiva/glimmer.svg)](https://gitter.im/AndyObtiva/glimmer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[Glimmer](https://github.com/AndyObtiva/glimmer) DSL for [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) enables building desktop applications with [Java Swing](https://docs.oracle.com/javase/tutorial/uiswing/) and [Java 2D](https://docs.oracle.com/javase/tutorial/2d/index.html) via [JRuby](https://www.jruby.org/).
+[Glimmer](https://github.com/AndyObtiva/glimmer) DSL for [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) enables building desktop applications with [Java Swing](https://docs.oracle.com/javase/tutorial/uiswing/), [Java AWT](https://docs.oracle.com/javase/8/docs/technotes/guides/awt/index.html), [Java Foundation Classes](https://docs.oracle.com/javase/tutorial/uiswing/start/about.html) and [Java 2D](https://docs.oracle.com/javase/tutorial/2d/index.html) via [JRuby](https://www.jruby.org/).
 
 There has been a great divide between two big GUI toolkits in Java in the past:
 - [Eclipse SWT](https://www.eclipse.org/swt/)
-- [Java Swing/AWT/2D](https://docs.oracle.com/javase/tutorial/uiswing/)
+- [Java Swing/AWT/JFC/2D](https://docs.oracle.com/javase/tutorial/uiswing/)
 
 [Glimmer](https://github.com/AndyObtiva/glimmer) intentionally avoided [Swing](https://docs.oracle.com/javase/tutorial/uiswing/)-like GUI toolkits in the past because they produced non-native looking graphical user interfaces that not only looked out of place in various operating systems, but also degraded usability, user experience, and the professional look of applications significantly, especially given that unlike [SWT](https://www.eclipse.org/swt/), [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) performance is affected by [Java Garbage Collection](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/performissues003.html) pauses. As such, [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) was initially born as the premiere [Glimmer](https://github.com/AndyObtiva/glimmer) DSL.
 
 That said, from a balanced software engineering point of view, there are sometimes non-functional requirements that might target [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) as an appropriate GUI toolkit solution. Like in the case of extending legacy [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) applications or developing rare applications that require fully custom looking graphical user interfaces (typically not recommended), such as traffic control planning or diagramming applications. In the latter case, it would not matter whether to use [SWT](https://www.eclipse.org/swt/) or [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) as they both provide support for building non-native components (in addition to native widgets in the case of [SWT](https://www.eclipse.org/swt/)).
 
 [Glimmer DSL for Swing](https://rubygems.org/gems/glimmer-dsl-swing) aims to supercharge productivity and maintainability in developing [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) applications by providing a DSL similar to [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) having:
-- Declarative DSL syntax that visually maps to the GUI widget hierarchy
+- Declarative DSL syntax that visually maps to the GUI component hierarchy
 - Convention over configuration via smart defaults and automation of low-level details
 - Requiring the least amount of syntax possible to build GUI
 - Custom Keyword support
 - Bidirectional Data-Binding to declaratively wire and automatically synchronize GUI with Business Models
-- Scaffolding for new custom widgets, apps, and gems
+- Scaffolding for new custom components, apps, and gems
 - Native-Executable packaging on Mac, Windows, and Linux.
 
 Hello, World!
+
+![screenshots/glimmer-dsl-swing-mac-hello-world.png](screenshots/glimmer-dsl-swing-mac-hello-world.png)
 
 ```ruby
 jframe('Hello, World!') {
@@ -45,7 +47,9 @@ Other [Glimmer](https://rubygems.org/gems/glimmer) DSL gems you might be interes
 
 - JDK 8 (find at https://www.oracle.com/java/technologies/downloads/#java8)
 - [RVM](http://rvm.io) on Mac & Linux (not available on Windows)
-- JRuby 9.2.20.1 (supporting Ruby 2.5.x syntax) (get via [RVM](http://rvm.io) on Mac and Linux by running `rvm install jruby-9.3.1.0`; On Windows, find at [https://www.jruby.org/download](https://www.jruby.org/download))
+- JRuby 9.2.19.0 (supporting Ruby 2.5.x syntax) (get via [RVM](http://rvm.io) on Mac and Linux by running `rvm install jruby-9.2.19.0`; On Windows, find at [https://www.jruby.org/download](https://www.jruby.org/download))
+
+Note: On the Mac, if you have [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) installed, and it added `export JRUBY_OPTS="$JRUBY_OPTS -J-XstartOnFirstThread"` to your `.zprofile`, `.zshrc`, `.bash_profile`, or `.bashrc`, make sure to disable it before using Glimmer DSL for Swing. Unfortunately, it is not compatible with it and will hang its apps until disabled.
 
 ## Setup
 
@@ -98,6 +102,34 @@ class SomeGlimmerApplication
 end
 
 SomeGlimmerApplication.new.launch
+```
+
+## Girb (Glimmer IRB)
+
+You can run the `girb` command (`bin/girb` if you cloned the project locally):
+
+```
+girb
+```
+
+This gives you `irb` with the `glimmer-dsl-gtk` gem loaded and the `Glimmer` module mixed into the main object for easy experimentation with GUI.
+
+## Samples
+
+### Hello Samples
+
+#### Hello, World!
+
+![screenshots/glimmer-dsl-swing-mac-hello-world.png](screenshots/glimmer-dsl-swing-mac-hello-world.png)
+
+```ruby
+require 'glimmer-dsl-swing'
+
+include Glimmer
+
+jframe('Hello, World!') {
+  jlabel('Hello, World!')
+}.show
 ```
 
 ## Resources

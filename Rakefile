@@ -17,7 +17,7 @@ Juwelier::Tasks.new do |gem|
   gem.homepage = "http://github.com/AndyObtiva/glimmer-dsl-swing"
   gem.license = "MIT"
   gem.summary = %Q{Glimmer DSL for Swing}
-  gem.description = %Q{Glimmer DSL for Swing (JRuby Swing Desktop Development GUI Library) - Enables development of desktop applications using Java Swing and Java 2D, including vector graphics and AWT geometry.}
+  gem.description = %Q{Glimmer DSL for Swing (JRuby Swing Desktop Development GUI Library) - Enables development of desktop applications using Java Swing, Java AWT, JFC (Java Foundation Classes), and Java 2D, including vector graphics and AWT geometry.}
   gem.email = "andy.am@gmail.com"
   gem.authors = ["Andy Maleh"]
   gem.executables = ['girb']
