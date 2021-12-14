@@ -39,6 +39,7 @@ module Glimmer
           listener
           property
           component
+          shape
         ]
       )
     end

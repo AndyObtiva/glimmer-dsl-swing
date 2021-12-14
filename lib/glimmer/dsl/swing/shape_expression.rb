@@ -25,35 +25,24 @@ require 'glimmer/dsl/parent_expression'
 module Glimmer
   module DSL
     module Swing
-      class ComponentExpression < Expression
+      class ShapeExpression < Expression
         include ParentExpression
   
         def can_interpret?(parent, keyword, *args, &block)
-          keyword = "j_#{keyword[1..-1]}" if keyword.match(/j[a-z]/) # TODO move this logic to ComponentProxy
-          Glimmer::Swing::ComponentProxy.exist?(keyword)
+          Glimmer::Swing::ShapeProxy.exist?(keyword)
         end
   
         def interpret(parent, keyword, *args, &block)
-          keyword = "j_#{keyword[1..-1]}" if keyword.match(/j[a-z]/) # TODO move this logic to ComponentProxy
-          Glimmer::Swing::ComponentProxy.create(parent, keyword, *args, &block)
+          Glimmer::Swing::ShapeProxy.create(parent, keyword, *args, &block)
         end
         
         def add_content(parent, keyword, *args, &block)
           super
           parent.post_add_content
         end
-        
-#         def around(parent, keyword, args, block, &interpret_and_add_content)
-#           if parent.nil? && keyword == 'jframe'
-#             Java::JavaxSwing::SwingUtilities.invoke_later(&interpret_and_add_content)
-#
-#           else
-#             super
-#           end
-#         end
       end
     end
   end
 end
 
-require 'glimmer/swing/component_proxy'
+require 'glimmer/swing/shape_proxy'

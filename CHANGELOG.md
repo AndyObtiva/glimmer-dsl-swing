@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.2
+
+- General Java 2D shape support by nesting under any component
+- Support setting `jframe` `minimum_size width, height` without building `Dimension` object manually
+
 ## 0.0.1
 
 - Initial version of Glimmer DSL for Swing

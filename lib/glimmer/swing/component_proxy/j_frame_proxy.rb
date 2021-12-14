@@ -31,11 +31,20 @@ module Glimmer
         DEFAULT_WIDTH = 190
         DEFAULT_HEIGHT = 150
         
+        def set_minimum_size(*args)
+          if args.size == 1 && args.first.is_a?(Java::JavaAwt::Dimension)
+            super
+          else
+            super(Java::JavaAwt::Dimension.new(*args))
+          end
+        end
+        alias minimum_size= set_minimum_size
+        
         def post_add_content
           unless @initial_content_added
             @initial_content_added = true
-            the_width = width == 0 ? DEFAULT_WIDTH : width
-            the_height = height == 0 ? DEFAULT_HEIGHT : height
+            the_width = minimum_size.width == 0 ? DEFAULT_WIDTH : width
+            the_height = minimum_size.height == 0 ? DEFAULT_HEIGHT : height
             set_minimum_size(Java::JavaAwt::Dimension.new(the_width, the_height))
             set_default_close_operation(Java::JavaxSwing::JFrame::EXIT_ON_CLOSE)
           end

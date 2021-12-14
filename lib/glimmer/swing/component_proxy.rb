@@ -106,7 +106,7 @@ module Glimmer
         @keyword = keyword
         @args = args
         @block = block
-        build_widget
+        build
         post_add_content if @block.nil?
       end
       
@@ -117,7 +117,15 @@ module Glimmer
       
       # Subclasses may override to perform post initialization work on an added child (normally must also call super)
       def post_initialize_child(child)
-        add(child)
+        if child.is_a?(ComponentProxy)
+          add(child)
+        elsif child.is_a?(ShapeProxy)
+          shape_proxies << child
+        end
+      end
+      
+      def shape_proxies
+        @shape_proxies ||= []
       end
       
       def respond_to?(method_name, *args, &block)
@@ -130,7 +138,9 @@ module Glimmer
       end
       
       def method_missing(method_name, *args, &block)
-        if @original.respond_to?("set_#{method_name}", true) && !args.empty?
+        if respond_to?("#{method_name}=", true) && !args.empty?
+          send("#{method_name}=", *args)
+        elsif @original.respond_to?("set_#{method_name}", true) && !args.empty?
           send_to_original("set_#{method_name}", *args, &block)
         elsif @original.respond_to?(method_name, true)
           send_to_original(method_name, *args, &block)
@@ -224,8 +234,28 @@ module Glimmer
 
       private
       
-      def build_widget
+      def build
         @original = ComponentProxy.component_class(keyword).new(*normalize_args(args))
+        setup_shape_painting
+      end
+      
+      def setup_shape_painting
+        @original.class.alias_method(:paint_without_glimmer, :paint)
+        @original.class.define_method(:paint) do |g2|
+          paint_without_glimmer(g2)
+          shape_proxies.each do |shape_proxy|
+            original_color = g2.get_color
+            if shape_proxy.fill_color
+              g2.color = Color.new(shape_proxy.fill_color[:r], shape_proxy.fill_color[:g], shape_proxy.fill_color[:b], shape_proxy.fill_color[:a] || 255)
+              g2.fill(shape_proxy)
+            end
+            if shape_proxy.draw_color
+              g2.color = Color.new(shape_proxy.draw_color[:r], shape_proxy.draw_color[:g], shape_proxy.draw_color[:b], shape_proxy.draw_color[:a] || 255)
+              g2.draw(shape_proxy)
+            end
+            g2.color = original_color
+          end
+        end
       end
       
       def normalize_args(args)
@@ -238,3 +268,4 @@ module Glimmer
 end
 
 Dir[File.expand_path("./#{File.basename(__FILE__, '.rb')}/*.rb", __dir__)].each {|f| require f}
+require 'glimmer/swing/shape_proxy'
