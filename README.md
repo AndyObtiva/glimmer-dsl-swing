@@ -5,7 +5,7 @@
 
 [Glimmer](https://github.com/AndyObtiva/glimmer) DSL for [Swing](https://docs.oracle.com/javase/tutorial/uiswing/) enables building desktop applications with [Java Swing](https://docs.oracle.com/javase/tutorial/uiswing/), [Java AWT](https://docs.oracle.com/javase/8/docs/technotes/guides/awt/index.html), [Java Foundation Classes](https://docs.oracle.com/javase/tutorial/uiswing/start/about.html) and [Java 2D](https://docs.oracle.com/javase/tutorial/2d/index.html) via [JRuby](https://www.jruby.org/).
 
-There has been a great divide between two big GUI toolkits in Java in the past:
+There has been a great divide between two big GUI toolkits in Java:
 - [Eclipse SWT](https://www.eclipse.org/swt/)
 - [Java Swing/AWT/JFC/2D](https://docs.oracle.com/javase/tutorial/uiswing/)
 
@@ -110,7 +110,7 @@ The Glimmer GUI DSL enables development of desktop graphical user interfaces in 
 
 1 - Keywords
 
-You may declare any swing/awt component with its keyword, which is the underscored version of the class name. For example, `jframe` is the keyword for `javax.swing.JFrame` (`j_frame` is acceptable too)
+You may declare any [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component with its keyword, which is the underscored version of the class name. For example, `jframe` is the keyword for `javax.swing.JFrame` (`j_frame` is acceptable too)
 
 Examples:
 
@@ -124,7 +124,7 @@ jlabel
 
 You may pass any arguments that a [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component constructor accepts to its Glimmer keyword.
 
-Example `JFrame`, `JLabel`, and `JButton` have a constructor signature that accepts a string representing title or text:
+Example (`JFrame`, `JButton`, and `JLabel` have a constructor signature that accepts a string representing title or text):
 
 ```ruby
 jframe('Hello, World!')
@@ -148,13 +148,13 @@ jframe('Hello, World!') {
 }
 ```
 
-The recommended style for the content block is to always be curly braces to denote as View nesting code different from the logic in looping/conditional constructs that utilize `do;end` instead.
+The recommended style for the content block is always curly braces `{}` to denote as View nesting code different from looping/conditional logic, which utilizes `do;end` instead.
 
 Property arguments never have parentheses.
 
 4 - Listeners
 
-You may declare listeners with their event method name on the [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) listener class (these are the classes in the signatures of `AddXYZListener` methods on [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component classes).
+You may declare listeners with their `on_`-prefixed event method name on the [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) listener class (these are the classes in the signatures of `AddXYZListener` methods on [swing](https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html)/[awt](https://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html) component classes).
 
 For example, `JButton` has an `AddXYZListener` method called `AddActionListener`, which accepts an `ActionListener` class. That class has one event method: `actionPerformed`. In Glimmer, you simply underscore that and prefix with `on_`:
 
@@ -183,7 +183,7 @@ frame1 = jframe('Hello, World!') {
 frame1.show
 ```
 
-Despite `#show` being deprecated in the Java API, it is recommended to use `#show` instead of `visible=` in the Glimmer GUI DSL because it has less awkward syntax (it calls `visible=` behind the scenes to avoid the deprecated API). `#show` also invokes `pack` automatically on first run, and ensures utilizing `SwingUtilities.invokeLater` behind the scenes.
+Despite `#show` being deprecated in the Java API, it is recommended to use `#show` instead of `visible=` in the Glimmer GUI DSL because it has less awkward syntax (it calls `visible=` behind the scenes to avoid the deprecated API). `#show` also invokes `pack` automatically on first run, utilizing `SwingUtilities.invokeLater`.
 
 6 - Observe Model Attributes
 
