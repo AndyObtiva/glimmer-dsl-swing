@@ -1,4 +1,4 @@
-# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.3
+# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.4
 ## JRuby Swing Desktop Development GUI Library
 [![Gem Version](https://badge.fury.io/rb/glimmer-dsl-swing.svg)](http://badge.fury.io/rb/glimmer-dsl-swing)
 [![Join the chat at https://gitter.im/AndyObtiva/glimmer](https://badges.gitter.im/AndyObtiva/glimmer.svg)](https://gitter.im/AndyObtiva/glimmer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -57,14 +57,14 @@ Note: On the Mac, if you have [Glimmer DSL for SWT](https://github.com/AndyObtiv
 
 Run this command to install directly:
 ```
-gem install glimmer-dsl-swing -v0.0.3
+gem install glimmer-dsl-swing -v0.0.4
 ```
 
 ### Option 2: Bundler
 
 Add the following to `Gemfile`:
 ```
-gem 'glimmer-dsl-swing', '0.0.3'
+gem 'glimmer-dsl-swing', '0.0.4'
 ```
 
 And, then run:
@@ -249,7 +249,10 @@ For example, `Arc2D` becomes simply `arc`.
 
 Glimmer utilizes the `Double` variation of shape classes.
 
-Additionally, you can set `draw_color` or `fill_color` property as an rgb/rgba hash (e.g. `r: 255, g: 0, b: 0`)
+Additionally, you can set these shape properties:
+- `draw_paint` (alias: `draw_color`): takes [`java.awt.Color`](https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html) rgba arguments to use color for drawing
+- `fill_paint` (alias: `fill_color`): takes [`java.awt.Color`](https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html) rgba arguments to use color for filling
+- `stroke`: takes [`java.awt.BasicStroke`](https://docs.oracle.com/javase/8/docs/api/java/awt/BasicStroke.html) line width and other arguments to use for drawing
 
 Example:
 
@@ -262,45 +265,54 @@ jframe('Hello, Shapes!') {
   minimum_size 400, 400
   
   arc(40, 40, 90, 90, 30, 230, 0) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
   arc(40, 140, 90, 90, 30, 230, 1) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
   arc(40, 240, 90, 90, 30, 230, 2) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
-  ellipse(140, 40, 180, 90) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
+  rectangle(140, 40, 180, 90) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
   
-  rectangle(140, 140, 180, 90) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
-  }
-  
-  round_rectangle(140, 240, 180, 90, 60, 40) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
+  round_rectangle(140, 140, 180, 90, 60, 40) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
 
+  ellipse(140, 240, 180, 90) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
+  }
+  
   line(180, 60, 280, 110) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
   
   quad_curve(170, 60, 180, 90, 220, 100) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 0, 255, 0
+    stroke 3
   }
   
   cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 0, 0, 255
+    stroke 3
   }
 }.show
 ```
@@ -453,45 +465,54 @@ jframe('Hello, Shapes!') {
   minimum_size 400, 400
   
   arc(40, 40, 90, 90, 30, 230, 0) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
   arc(40, 140, 90, 90, 30, 230, 1) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
   arc(40, 240, 90, 90, 30, 230, 2) {
-    fill_color r: 255, g: 0, b: 0
-    draw_color r: 0, g: 255, b: 255
+    fill_paint 255, 0, 0
+    draw_paint 0, 128, 255
+    stroke 3
   }
   
-  ellipse(140, 40, 180, 90) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
+  rectangle(140, 40, 180, 90) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
   
-  rectangle(140, 140, 180, 90) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
-  }
-  
-  round_rectangle(140, 240, 180, 90, 60, 40) {
-    fill_color r: 0, g: 255, b: 255
-    draw_color r: 255, g: 0, b: 0
+  round_rectangle(140, 140, 180, 90, 60, 40) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
 
+  ellipse(140, 240, 180, 90) {
+    fill_paint 255, 255, 0
+    draw_paint 255, 0, 0
+    stroke 3
+  }
+  
   line(180, 60, 280, 110) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 255, 0, 0
+    stroke 3
   }
   
   quad_curve(170, 60, 180, 90, 220, 100) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 0, 255, 0
+    stroke 3
   }
   
   cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
-    draw_color r: 0, g: 0, b: 0
+    draw_paint 0, 0, 255
+    stroke 3
   }
 }.show
 ```

@@ -99,7 +99,6 @@ module Glimmer
       end
       
       attr_reader :parent_proxy, :original, :args, :keyword, :block
-      attr_accessor :draw_color, :fill_color
       
       def initialize(parent, keyword, *args, &block)
         @parent_proxy = parent
@@ -148,6 +147,34 @@ module Glimmer
       def content(&block)
         Glimmer::DSL::Engine.add_content(self, Glimmer::DSL::Swing::ShapeExpression.new, @keyword, &block)
       end
+      
+      def stroke=(*args)
+        @stroke = BasicStroke.new(*args)
+      end
+      
+      def stroke
+        @stroke
+      end
+      
+      def draw_paint=(*args)
+        @draw_paint = Color.new(*args)
+      end
+      alias draw_color= draw_paint=
+      
+      def draw_paint
+        @draw_paint
+      end
+      alias draw_color draw_paint
+      
+      def fill_paint=(*args)
+        @fill_paint = Color.new(*args)
+      end
+      alias fill_color= fill_paint=
+      
+      def fill_paint
+        @fill_paint
+      end
+      alias fill_color fill_paint
       
       private
       

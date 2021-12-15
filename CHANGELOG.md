@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.4
+
+- Support setting `stroke` attribute in shapes
+- Rename `draw_color` and `fill_color` to `draw_paint` and `fill_paint` to be consistent with `java.awt.Graphics2D` terminology (while keeping older syntax as an alias/alternative)
+- Enable antialiasing by default on Java 2D graphics
+- Update Hello, Shapes! to take advantage of `stroke`
+
 ## 0.0.3
 
 - Support `observe` keyword for observing model attributes to update the View

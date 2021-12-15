@@ -87,18 +87,23 @@ module Glimmer
                 attr_accessor :shape_proxies
       
                 def paint(g2)
+                  rendering_hints = RenderingHints.new(RenderingHints::KEY_ANTIALIASING, RenderingHints::VALUE_ANTIALIAS_ON)
+                  g2.set_rendering_hints(rendering_hints)
                   super(g2)
                   shape_proxies.each do |shape_proxy|
-                    original_color = g2.get_color
+                    original_paint = g2.get_paint
+                    original_stroke = g2.get_stroke
                     if shape_proxy.fill_color
-                      g2.color = Color.new(shape_proxy.fill_color[:r], shape_proxy.fill_color[:g], shape_proxy.fill_color[:b], shape_proxy.fill_color[:a] || 255)
+                      g2.set_paint shape_proxy.fill_paint
                       g2.fill(shape_proxy)
                     end
                     if shape_proxy.draw_color
-                      g2.color = Color.new(shape_proxy.draw_color[:r], shape_proxy.draw_color[:g], shape_proxy.draw_color[:b], shape_proxy.draw_color[:a] || 255)
+                      g2.set_stroke shape_proxy.stroke unless shape_proxy.stroke.nil?
+                      g2.set_paint shape_proxy.draw_paint
                       g2.draw(shape_proxy)
                     end
-                    g2.color = original_color
+                    g2.set_paint original_paint
+                    g2.set_stroke original_stroke || BasicStroke.new
                   end
                 end
               }

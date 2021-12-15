@@ -32,7 +32,7 @@ module Glimmer
             parent.is_a?(Glimmer::Swing::ShapeProxy)
           ) and
             block.nil? and
-            parent.respond_to?(keyword, *args)
+            parent.respond_to?("#{keyword}=", *args)
         end
   
         def interpret(parent, keyword, *args, &block)
