@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.5
+
+- Support `path`, which can primarily contain `move_to`, `line_to`, `curve_to`, `close_path` calls, and secondarily other shapes like `line` or `rectangle`.
+- Support invoking component/shape operations in their content (e.g. nesting `move_to` inside `path`)
+
 ## 0.0.4
 
 - Support setting `stroke` attribute in shapes

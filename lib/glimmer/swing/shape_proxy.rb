@@ -116,9 +116,7 @@ module Glimmer
       
       # Subclasses may override to perform post initialization work on an added child (normally must also call super)
       def post_initialize_child(child)
-        if child.is_a?(ShapeProxy)
-          add(child)
-        end
+        @original.append(child.original, false) if @original&.is_a?(Path2D) && child.is_a?(ShapeProxy)
       end
       
       def respond_to?(method_name, *args, &block)

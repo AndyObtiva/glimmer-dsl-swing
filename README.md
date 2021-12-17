@@ -1,4 +1,4 @@
-# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.4
+# [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=85 />](https://github.com/AndyObtiva/glimmer) Glimmer DSL for Swing 0.0.5
 ## JRuby Swing Desktop Development GUI Library
 [![Gem Version](https://badge.fury.io/rb/glimmer-dsl-swing.svg)](http://badge.fury.io/rb/glimmer-dsl-swing)
 [![Join the chat at https://gitter.im/AndyObtiva/glimmer](https://badges.gitter.im/AndyObtiva/glimmer.svg)](https://gitter.im/AndyObtiva/glimmer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -57,14 +57,14 @@ Note: On the Mac, if you have [Glimmer DSL for SWT](https://github.com/AndyObtiv
 
 Run this command to install directly:
 ```
-gem install glimmer-dsl-swing -v0.0.4
+gem install glimmer-dsl-swing -v0.0.5
 ```
 
 ### Option 2: Bundler
 
 Add the following to `Gemfile`:
 ```
-gem 'glimmer-dsl-swing', '0.0.4'
+gem 'glimmer-dsl-swing', '0.0.5'
 ```
 
 And, then run:
@@ -189,7 +189,7 @@ Despite `#show` being deprecated in the Java API, it is recommended to use `#sho
 
 In Smalltalk-MVC ([Model View Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) Architectural Pattern), the View is an active View that observes the Model for changes and updates itself.
 
-![MVC](https://camo.githubusercontent.com/0651c35cc70c5ba422876936733b07667368835bbd3cdbf5e706151410bdea04/68747470733a2f2f7777772e7265736561726368676174652e6e65742f70726f66696c652f44616e6e792d5765796e732f7075626c69636174696f6e2f3236393330333631312f6669677572652f666967322f41533a38353831333330353634363238363640313538313630363237323830302f536d616c6c74616c6b38302d4d56432d7061747465726e2d566965772d616e642d436f6e74726f6c6c65722d776f726b2d61732d612d706169722d616c6c6f77696e672d7468652d757365722d746f2d696e7465726163742e70706d)
+![MVC](http://3.bp.blogspot.com/-4eW59Ao0ess/ToiBzAiYdZI/AAAAAAAAAOg/SiYa6XHwBFE/s320/Screen+shot+2011-10-02+at+10.22.11+AM.png)
 
 This can be achieved with the Glimmer GUI DSL using the `observe` keyword, which takes a model (any object, including `self`) and attribute Symbol or String expression (e.g. `:count` or `'address.street'`).
 
@@ -254,6 +254,12 @@ Additionally, you can set these shape properties:
 - `fill_paint` (alias: `fill_color`): takes [`java.awt.Color`](https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html) rgba arguments to use color for filling
 - `stroke`: takes [`java.awt.BasicStroke`](https://docs.oracle.com/javase/8/docs/api/java/awt/BasicStroke.html) line width and other arguments to use for drawing
 
+`path` can have the following operations nested:
+- `move_to x, y`: move to point
+- `line_to x2, y2`: connect line to end point
+- `curve_to ctrl_x1, ctrl_y1, ctrl_x2, ctrl_y2, x2, y2`: connect curve to control point 1, control point 2, and end point
+- `close_path`: close path, reconnecting last shape/point back to first point
+
 Example:
 
 ```ruby
@@ -311,6 +317,32 @@ jframe('Hello, Shapes!') {
   }
   
   cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
+    draw_paint 0, 0, 255
+    stroke 3
+  }
+  
+  path {
+    move_to 200, 150
+    line_to 270, 170
+    line_to 250, 220
+    line_to 220, 190
+    line_to 200, 200
+    line_to 180, 170
+    
+    close_path
+    
+    fill_paint 0, 255, 0
+    draw_paint 0, 0, 255
+    stroke 3
+  }
+  
+  path {
+    move_to 160, 300
+    curve_to 190, 260, 200, 280, 210, 270
+    curve_to 240, 280, 250, 300, 260, 290
+    curve_to 290, 290, 300, 310, 310, 300
+    
+    fill_paint 0, 255, 0
     draw_paint 0, 0, 255
     stroke 3
   }
@@ -511,6 +543,32 @@ jframe('Hello, Shapes!') {
   }
   
   cubic_curve(190, 60, 240, 40, 220, 80, 260, 70) {
+    draw_paint 0, 0, 255
+    stroke 3
+  }
+  
+  path {
+    move_to 200, 150
+    line_to 270, 170
+    line_to 250, 220
+    line_to 220, 190
+    line_to 200, 200
+    line_to 180, 170
+    
+    close_path
+    
+    fill_paint 0, 255, 0
+    draw_paint 0, 0, 255
+    stroke 3
+  }
+  
+  path {
+    move_to 160, 300
+    curve_to 190, 260, 200, 280, 210, 270
+    curve_to 240, 280, 250, 300, 260, 290
+    curve_to 290, 290, 300, 310, 310, 300
+    
+    fill_paint 0, 255, 0
     draw_paint 0, 0, 255
     stroke 3
   }

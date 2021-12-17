@@ -19,30 +19,27 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'glimmer/dsl/engine'
-Dir[File.expand_path('*_expression.rb', __dir__)].each {|f| require f}
-
-# Glimmer DSL expression configuration module
-#
-# When DSL engine interprets an expression, it attempts to handle
-# with expressions listed here in the order specified.
-
-# Every expression has a corresponding Expression subclass
-# in glimmer/dsl
+require 'glimmer/dsl/expression'
+require 'glimmer/swing/component_proxy'
+require 'glimmer/swing/shape_proxy'
 
 module Glimmer
   module DSL
     module Swing
-      Engine.add_dynamic_expressions(
-        Swing,
-        %w[
-          listener
-          property
-          operation
-          component
-          shape
-        ]
-      )
+      class OperationExpression < Expression
+        def can_interpret?(parent, keyword, *args, &block)
+          (
+            parent.is_a?(Glimmer::Swing::ComponentProxy) or
+            parent.is_a?(Glimmer::Swing::ShapeProxy)
+          ) and
+            block.nil? and
+            parent.respond_to?(keyword, *args)
+        end
+  
+        def interpret(parent, keyword, *args, &block)
+          parent.send(keyword, *args)
+        end
+      end
     end
   end
 end

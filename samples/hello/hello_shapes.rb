@@ -55,4 +55,30 @@ jframe('Hello, Shapes!') {
     draw_paint 0, 0, 255
     stroke 3
   }
+  
+  path {
+    move_to 200, 150
+    line_to 270, 170
+    line_to 250, 220
+    line_to 220, 190
+    line_to 200, 200
+    line_to 180, 170
+    
+    close_path
+    
+    fill_paint 0, 255, 0
+    draw_paint 0, 0, 255
+    stroke 3
+  }
+  
+  path {
+    move_to 160, 300
+    curve_to 190, 260, 200, 280, 210, 270
+    curve_to 240, 280, 250, 300, 260, 290
+    curve_to 290, 290, 300, 310, 310, 300
+    
+    fill_paint 0, 255, 0
+    draw_paint 0, 0, 255
+    stroke 3
+  }
 }.show
